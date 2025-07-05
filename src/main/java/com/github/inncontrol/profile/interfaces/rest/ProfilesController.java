@@ -2,6 +2,8 @@ package com.github.inncontrol.profile.interfaces.rest;
 
 import com.github.inncontrol.profile.domain.model.queries.GetAllProfilesQuery;
 import com.github.inncontrol.profile.domain.model.queries.GetProfileByIdQuery;
+import com.github.inncontrol.profile.domain.model.queries.GetProfileByEmailQuery;
+import com.github.inncontrol.profile.domain.model.valueobjects.EmailAddress;
 import com.github.inncontrol.profile.domain.services.ProfileCommandService;
 import com.github.inncontrol.profile.domain.services.ProfileQueryService;
 import com.github.inncontrol.profile.interfaces.rest.resources.CreateProfileResource;
@@ -42,6 +44,16 @@ public class ProfilesController {
     public ResponseEntity<ProfileResource> getProfileById(@PathVariable Long profileId) {
         var getProfileByIdQuery = new GetProfileByIdQuery(profileId);
         var profile = profileQueryService.handle(getProfileByIdQuery);
+        if (profile.isEmpty()) return ResponseEntity.notFound().build();
+        var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
+        return ResponseEntity.ok(profileResource);
+    }
+
+    @GetMapping("/by-email")
+    public ResponseEntity<ProfileResource> getProfileByEmail(@RequestParam String email) {
+        var emailAddress = new EmailAddress(email);
+        var getProfileByEmailQuery = new GetProfileByEmailQuery(emailAddress);
+        var profile = profileQueryService.handle(getProfileByEmailQuery);
         if (profile.isEmpty()) return ResponseEntity.notFound().build();
         var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
         return ResponseEntity.ok(profileResource);
