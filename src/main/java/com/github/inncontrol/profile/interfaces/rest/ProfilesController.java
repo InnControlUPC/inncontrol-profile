@@ -31,15 +31,6 @@ public class ProfilesController {
         this.profileQueryService = profileQueryService;
     }
 
-    @PostMapping
-    public ResponseEntity<ProfileResource> createProfile(@RequestBody CreateProfileResource resource) {
-        var createProfileCommand = CreateProfileCommandFromResourceAssembler.toCommandFromResource(resource);
-        var profile = profileCommandService.handle(createProfileCommand);
-        if (profile.isEmpty()) return ResponseEntity.badRequest().build();
-        var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
-        return new ResponseEntity<>(profileResource, HttpStatus.CREATED);
-    }
-
     @GetMapping("/by-email")
     public ResponseEntity<ProfileResource> getProfileByEmail(@RequestParam String email) {
         var emailAddress = new EmailAddress(email);
@@ -49,6 +40,17 @@ public class ProfilesController {
         var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
         return ResponseEntity.ok(profileResource);
     }
+
+    @PostMapping
+    public ResponseEntity<ProfileResource> createProfile(@RequestBody CreateProfileResource resource) {
+        var createProfileCommand = CreateProfileCommandFromResourceAssembler.toCommandFromResource(resource);
+        var profile = profileCommandService.handle(createProfileCommand);
+        if (profile.isEmpty()) return ResponseEntity.badRequest().build();
+        var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
+        return new ResponseEntity<>(profileResource, HttpStatus.CREATED);
+    }
+
+
 
     @GetMapping("/{profileId}")
     public ResponseEntity<ProfileResource> getProfileById(@PathVariable Long profileId) {
