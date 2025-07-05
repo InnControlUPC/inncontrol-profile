@@ -40,15 +40,6 @@ public class ProfilesController {
         return new ResponseEntity<>(profileResource, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{profileId}")
-    public ResponseEntity<ProfileResource> getProfileById(@PathVariable Long profileId) {
-        var getProfileByIdQuery = new GetProfileByIdQuery(profileId);
-        var profile = profileQueryService.handle(getProfileByIdQuery);
-        if (profile.isEmpty()) return ResponseEntity.notFound().build();
-        var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
-        return ResponseEntity.ok(profileResource);
-    }
-
     @GetMapping("/by-email")
     public ResponseEntity<ProfileResource> getProfileByEmail(@RequestParam String email) {
         var emailAddress = new EmailAddress(email);
@@ -58,6 +49,17 @@ public class ProfilesController {
         var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
         return ResponseEntity.ok(profileResource);
     }
+
+    @GetMapping("/{profileId}")
+    public ResponseEntity<ProfileResource> getProfileById(@PathVariable Long profileId) {
+        var getProfileByIdQuery = new GetProfileByIdQuery(profileId);
+        var profile = profileQueryService.handle(getProfileByIdQuery);
+        if (profile.isEmpty()) return ResponseEntity.notFound().build();
+        var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
+        return ResponseEntity.ok(profileResource);
+    }
+
+
 
     @GetMapping
     public ResponseEntity<List<ProfileResource>> getAllProfiles() {
