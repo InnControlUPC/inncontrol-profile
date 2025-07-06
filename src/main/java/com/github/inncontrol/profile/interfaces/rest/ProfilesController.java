@@ -51,7 +51,7 @@ public class ProfilesController {
     }
 
 
-/*
+
     @GetMapping("/{profileId:\\d+}")
     public ResponseEntity<ProfileResource> getProfileById(@PathVariable Long profileId) {
         var getProfileByIdQuery = new GetProfileByIdQuery(profileId);
@@ -60,7 +60,7 @@ public class ProfilesController {
         var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
         return ResponseEntity.ok(profileResource);
     }
-*/
+
 
 
     @GetMapping
